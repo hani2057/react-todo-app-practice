@@ -1,31 +1,37 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { Droppable } from "react-beautiful-dnd";
 import { DragDropContext } from "react-beautiful-dnd";
 import List from "./List";
 
-const Lists = React.memo(({ todoData, setTodoData, handleClick }) => {
-  console.log("Lists component");
+const Lists = React.memo(({ todoData, setTodoData, handleRemoveClick }) => {
+  console.log("Lists component re-rendered");
 
-  const handleEnd = (result) => {
-    console.log(result);
+  const handleDragEnd = useCallback(
+    (result) => {
+      // console.log(result);
 
-    if (!result.destination) return;
+      if (!result.destination) return;
 
-    const newTodoData = todoData;
+      // const newTodoData = todoData;
+      const newTodoData = todoData.map((todo) => todo);
+      // console.log(todoData);
+      // console.log(newTodoData);
 
-    // 1. 변경시키는(드래그하는) 아이템을 배열에서 지우고 reorderedItem 변수에 저장
-    const [reorderedItem] = newTodoData.splice(result.source.index, 1);
+      // 1. 변경시키는(드래그하는) 아이템을 배열에서 지우고 reorderedItem 변수에 저장
+      const [reorderedItem] = newTodoData.splice(result.source.index, 1);
 
-    // 2. 원하는 자리에 reorderedItem을 insert하고 todoData state를 변경
-    newTodoData.splice(result.destination.index, 0, reorderedItem);
-    setTodoData(newTodoData);
-    localStorage.setItem("todoData", JSON.stringify(newTodoData));
-  };
+      // 2. 원하는 자리에 reorderedItem을 insert하고 todoData state를 변경
+      newTodoData.splice(result.destination.index, 0, reorderedItem);
+      setTodoData(newTodoData);
+      localStorage.setItem("todoData", JSON.stringify(newTodoData));
+    },
+    [todoData, setTodoData]
+  );
 
   return (
     <div>
-      <DragDropContext onDragEnd={handleEnd}>
+      <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="todo">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -45,7 +51,7 @@ const Lists = React.memo(({ todoData, setTodoData, handleClick }) => {
                       setTodoData={setTodoData}
                       provided={provided}
                       snapshot={snapshot}
-                      handleClick={handleClick}
+                      handleRemoveClick={handleRemoveClick}
                     />
                   )}
                 </Draggable>
@@ -82,7 +88,7 @@ export default Lists;
 //           <div>
 //             <button
 //               className="px-4 py-2 float-right"
-//               onClick={() => handleClick(data.id)}
+//               onClick={() => handleRemoveClick(data.id)}
 //             >
 //               x
 //             </button>

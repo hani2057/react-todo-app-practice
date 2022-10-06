@@ -1,7 +1,8 @@
 import React from "react";
 
-export default function Form({ value, setValue, handleSubmit}) {
-  console.log('Form component');
+export default function Form({ value, setValue, handleSubmit }) {
+  console.log("Form component re-rendered");
+
   const handleChange = (e) => {
     setValue(e.target.value);
     console.log(e.target.value);

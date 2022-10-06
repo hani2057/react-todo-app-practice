@@ -9,9 +9,10 @@ const List = React.memo(
     setTodoData,
     provided,
     snapshot,
-    handleClick,
+    handleRemoveClick,
   }) => {
-    console.log("List component");
+    console.log("List component re-rendered");
+    console.log(todoData);
 
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
@@ -31,12 +32,13 @@ const List = React.memo(
       setEditedTitle(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleEditSubmit = (e) => {
       e.preventDefault();
       let newTodoData = todoData.map((data) => {
         if (data.id === id) {
           data.title = editedTitle;
         }
+        console.log(data);
         return data;
       });
       setTodoData(newTodoData);
@@ -49,7 +51,7 @@ const List = React.memo(
       return (
         <div className="flex items-center justify-between w-full px-4 py-1 my-2 text-gray-600 border rounded bg-gray-100">
           <div className="items-center">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleEditSubmit}>
               <input
                 value={editedTitle}
                 onChange={handleEditChange}
@@ -65,7 +67,7 @@ const List = React.memo(
               취소
             </button>
             <button
-              onClick={handleSubmit}
+              onClick={handleEditSubmit}
               className="px-4 py-2 float-right"
               type="submit"
             >
@@ -88,7 +90,7 @@ const List = React.memo(
           <div className="items-center">
             <input
               type="checkbox"
-              defaultChecked={false}
+              defaultChecked={completed}
               className="mr-2"
               onChange={() => handleCompleteChange(id)}
             />
@@ -99,7 +101,7 @@ const List = React.memo(
           <div>
             <button
               className="px-4 py-2 float-right"
-              onClick={() => handleClick(id)}
+              onClick={() => handleRemoveClick(id)}
             >
               삭제
             </button>
